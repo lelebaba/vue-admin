@@ -27,7 +27,7 @@ let routes = [
   {
     path: '/',
     component: Home,
-    name: '导航一',
+    name: '数据管理',
 
     // 图标样式class
     iconCls: 'el-icon-message',
