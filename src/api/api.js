@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 let base = '';
+let wbas = 'http://www.mybestiot.com/nb';
 
 export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
@@ -17,3 +18,5 @@ export const batchRemoveUser = params => { return axios.get(`${base}/user/batchr
 export const editUser = params => { return axios.get(`${base}/user/edit`, { params: params }); };
 
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
+
+export const getCompListAll = params => { return axios.get(`${wbas}/compListAll`, { params: params }); };

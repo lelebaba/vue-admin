@@ -178,7 +178,7 @@
 	export default {
 		data() {
 			return {
-				sysName: 'VUEADMINMOCK',
+				sysName: '云联管控平台',
 				collapsed: false,
 				sysUserName: '',
 				sysUserAvatar: '',
