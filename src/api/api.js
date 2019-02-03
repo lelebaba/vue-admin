@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+
 let base = '';
-let wbas = 'http://www.mybestiot.com/nb';
+//let wbas = 'http://www.mybestiot.com/nb';
 
 export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
 
@@ -19,4 +20,9 @@ export const editUser = params => { return axios.get(`${base}/user/edit`, { para
 
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
-export const getCompListAll = params => { return axios.get(`${wbas}/compListAll`, { params: params }); };
+var axiosInst = axios.create({
+  baseURL: 'http://www.mybestiot.com/nb/'
+});
+
+export const getCompListAll = params => { return axiosInst.get(`compListAll`, { params: params }); };
+export const getCompListPage = params => { return axiosInst.get(`compList`, { params: params }); };

@@ -10,3 +10,4 @@ export const SUCCESSFUL_MESSAGE = 'SUCCESSFUL_MESSAGE';
 export const FAILING_MESSAGE = 'FAILING_MESSAGE';
 
 export const GET_COMPS_ALL = 'GET_COMPS_ALL';
+export const GET_COMPS = 'GET_COMPS';

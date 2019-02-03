@@ -1,4 +1,4 @@
-import { getCompListAll} from '../../api/api';
+import { getCompListAll,getCompListPage} from '../../api/api';
 import * as types from '../mutation-types';
 
 // TODO: Should not deal with view state in Vuex;
@@ -8,16 +8,30 @@ import * as types from '../mutation-types';
 const state = {
 	compObj: {
 		comps: [],
-		total: 0,
+		total: 3,
 	},
 	listLoading: false,
 	editLoading: false,
 	addLoading: false,
 };
 
+// const getters = {
+// 	comps: state => state.compObj.data,
+// 	total: state => state.compObj.data.totalNum,
+// 	listLoading: state => state.listLoading,
+// 	editLoading: state => state.editLoading,
+// 	addLoading: state => state.addLoading,
+// };
+
 const getters = {
-	comps: state => state.compObj.comps,
-	total: state => state.compObj.total,
+	comps: state => {
+		console.log("state.compObj.data====="+JSON.stringify(state.compObj.data));
+		return state.compObj.data;
+		},
+	total: state => {
+		console.log("state.compObj.data=="+JSON.stringify(state.compObj.data));
+		return state.compObj.data.totalNum;
+		},
 	listLoading: state => state.listLoading,
 	editLoading: state => state.editLoading,
 	addLoading: state => state.addLoading,
@@ -25,9 +39,17 @@ const getters = {
 
 
 const actions = {
+	getComps({ commit, state }, para) {
+		state.listLoading = true;
+		getCompListPage(para).then((value) => {
+			commit(types.GET_COMPS, { value });
+			state.listLoading = false;
+		});
+	},
 	getCompsAll({ commit, state }) {
 		state.listLoading = true;
 		getCompListAll().then((value) => {
+			console.log("value: " + JSON.stringify(value));
 			commit(types.GET_COMPS_ALL, { value });
 			state.listLoading = false;
 		});
@@ -37,6 +59,11 @@ const actions = {
 const mutations = {
 	[types.GET_COMPS_ALL](state, { value }) {
 		state.compObj = value.data;
+		//console.log("state.compObj: " + JSON.stringify(state.compObj));
+	},
+	[types.GET_COMPS](state, { value }) {
+		state.compObj = value.data;
+		console.log("state.compObj: " + JSON.stringify(state.compObj.data.totalNum));
 	},
 
 };

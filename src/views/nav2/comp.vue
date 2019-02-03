@@ -22,13 +22,13 @@
       </el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="名称" width="120" sortable>
+			<el-table-column prop="name" label="名称" width="150" sortable>
 			</el-table-column>
-			<el-table-column prop="tel" label="电话" width="100" sortable>
+			<el-table-column prop="tel" label="电话" width="150" sortable>
 			</el-table-column>
 			<el-table-column prop="linkman" label="联系人" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="address" label="地址" width="120" sortable>
+			<el-table-column prop="address" label="地址" width="180" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
@@ -123,8 +123,8 @@
 				// users: [],
 				// total: 0,
 				page: 1,
-				pageSize: 10,
-				pageSizes: [10, 20, 30, 50],
+				pageSize: 5,
+				pageSizes: [5, 10, 30, 50],
 				// listLoading: false,
 
 				// 列表选中列
@@ -176,9 +176,11 @@
 			// 	return this.$store.getters.users;
 			// },
 			currentComps() {
-				const start = (this.page - 1) * this.pageSize;
-				const end = this.page * this.pageSize;
-				return this.comps.slice(start, end);
+				//const start = (this.page - 1) * this.pageSize;
+				//const end = this.page * this.pageSize;
+				//return this.comps.slice(start, end);
+				console.log("this.total:"+this.total)
+				return this.comps.content;
 			},
 			
 			...mapGetters([
@@ -230,6 +232,15 @@
 			// 获取所有用户列表
 			getCompsAll() {
 				this.$store.dispatch('getCompsAll');
+			},
+			
+			getComps() {
+				let para = {
+					pageNo: this.page,
+					pageSize:this.pageSize,
+					name: this.filters.name,
+				};
+				this.$store.dispatch('getComps',para);
 			},
 
 			// 删除
@@ -359,7 +370,7 @@
 			}
 		},
 		created() {
-			this.getCompsAll();
+			this.getComps();
 		},
 		// mounted() {
 		// 	this.getUsers();
