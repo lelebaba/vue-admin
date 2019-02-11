@@ -24,5 +24,6 @@ var axiosInst = axios.create({
   baseURL: 'http://www.mybestiot.com/nb/'
 });
 
+
 export const getCompListAll = params => { return axiosInst.get(`compListAll`, { params: params }); };
 export const getCompListPage = params => { return axiosInst.get(`compList`, { params: params }); };
