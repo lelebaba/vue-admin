@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="请输入公司名称"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" v-on:click="getComps">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
@@ -45,7 +45,9 @@
 					layout="sizes, total, prev, pager, next"
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
+					:current-page="page"
 					:page-sizes="pageSizes"
+					:page-size="pageSize"
 					:total="total"
 					style="float:right;">
 				</el-pagination>
@@ -175,21 +177,25 @@
 			// 	}
 			// 	return this.$store.getters.users;
 			// },
-			currentComps() {
-				//const start = (this.page - 1) * this.pageSize;
-				//const end = this.page * this.pageSize;
-				//return this.comps.slice(start, end);
-				console.log("this.total:"+this.total)
-				return this.comps.content;
-			},
-			
 			...mapGetters([
 				'comps', // 映射 `this.users` 为 `store.getters.users`
-				'total',
 				'listLoading',
 				'editLoading',
 				'addLoading',
 			]),
+			currentComps() {
+				//首次打开页面取列表时，tableComp中getCompListPage(para).then((value)还没执行完毕
+				//就开始从store.state中取值，此时store.getters.comps为空
+				//如下处理后，当store.getters.comps取到值后，此函数会自动再次执行？
+				if(this.comps){
+					this.total=this.comps.totalNum;
+					return this.comps.content;
+				}else{
+					console.log("this.comps:没取到值 " + this.comps);
+					this.total = 0;
+					return [];
+				}
+			},
 		},
 		methods: {
 			// 性别显示转换
@@ -201,32 +207,14 @@
 			handleSizeChange(val) {
 				console.log(`每页 ${val} 条`);
 				this.pageSize = val;
+				this.getComps();
 			},
 
 			// 翻页
 			handleCurrentChange(val) {
 				console.log(`当前是 ${val} 页`);
 				this.page = val;
-				// this.getUsers();
-			},
-
-			// 获取用户列表
-			getUsers() {
-				let para = {
-					page: this.page,
-					name: this.filters.name,
-				};
-				// this.listLoading = true;
-				// //NProgress.start();
-				// getUserListPage(para).then((res) => {
-				// 	this.total = res.data.total;
-				// 	this.users = res.data.users;
-				// 	this.listLoading = false;
-				// 	//NProgress.done();
-				// });
-				//
-				// this.$store.dispatch('getUsers', { page, name }).then(() => this.listLoading = false;);
-				this.$store.dispatch('getUsers', para);
+				this.getComps();
 			},
 
 			// 获取所有用户列表
@@ -370,6 +358,7 @@
 			}
 		},
 		created() {
+			console.log("comp.vue-->调用this.getComps().....");
 			this.getComps();
 		},
 		// mounted() {

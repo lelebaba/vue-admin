@@ -53,6 +53,14 @@
 				:class="collapsed ? 'menu-collapsed' : 'menu-expanded'">
 
 				<!--导航菜单-->
+			
+				<!-- 
+				1.要实现路由跳转，先要在el-menu标签上添加router属性，
+				然后只要在每个el-menu-item标签内的index属性设置一下url即可实现点击el-menu-item实现路由跳转。
+				2.导航当前项，在el-menu标签中绑定  :default-active="$route.path",注意是绑定属性，不要忘了加“:”,
+				当$route.path等于el-menu-item标签中的index属性值时则该item为当前项。
+				 -->
+
 				<el-menu
 					:default-active="$route.path"
 					class="el-menu-vertical-demo"
