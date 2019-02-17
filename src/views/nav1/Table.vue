@@ -276,6 +276,7 @@
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
+				console.log("this.editForm=="+JSON.stringify(this.editForm));
 			},
 
 			// 显示新增界面

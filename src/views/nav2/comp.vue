@@ -56,23 +56,17 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="名称" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
+				<el-form-item label="电话" prop="tel">
+					<el-input v-model="editForm.tel" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+				<el-form-item label="联系人">
+					<el-input v-model="editForm.linkman" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
+					<el-input type="textarea" v-model="editForm.address"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -143,12 +137,11 @@
 
 				// 编辑界面数据
 				editForm: {
-					id: 0,
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: '',
+//					id: 0,
+//					name: '',
+//					tel: '',
+//					linkman: '',
+//					address: '',
 				},
 
 				// 新增界面是否显示
@@ -274,6 +267,7 @@
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
+				console.log("this.editForm=="+JSON.stringify(this.editForm));
 			},
 
 			// 显示新增界面
@@ -300,8 +294,7 @@
 									name: this.filters.name,
 								},
 							});
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							this.$store.dispatch('editUser', para).then(() => {
+							this.$store.dispatch('editComp', para).then(() => {
 								//NProgress.done();
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;

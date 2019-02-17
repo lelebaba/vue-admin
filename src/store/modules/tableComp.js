@@ -47,6 +47,14 @@ const actions = {
 			state.listLoading = false;
 		});
 	},
+	editComp({ dispatch, commit, state }, para) {
+		state.editLoading = true;
+		editComp(para).then((value) => {
+			dispatch('editSuccess');
+			//dispatch('getUsersAll');
+			state.editLoading = false;
+		});
+	},
 // 	getCompsAll({ commit, state }) {
 // 		state.listLoading = true;
 // 		getCompListAll().then((value) => {

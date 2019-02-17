@@ -13,4 +13,8 @@ export default {
 		const messages = '新增成功!';
 		commit(types.SUCCESSFUL_MESSAGE, { messages: messages });
 	},
+	editSuccess({ commit }) {
+		const messages = '提交成功!';
+		commit(types.SUCCESSFUL_MESSAGE, { messages: messages });
+	},
 };
