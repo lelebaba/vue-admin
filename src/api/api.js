@@ -27,3 +27,10 @@ var axiosInst = axios.create({
 
 export const getCompListAll = params => { return axiosInst.get(`compListAll`, { params: params }); };
 export const getCompListPage = params => { return axiosInst.get(`compList`, { params: params }); };
+export const saveComp = params => { 
+	let usParam = new URLSearchParams();
+	Object.keys(params).forEach(function(key){
+		usParam.append(key,params[key]);
+	});
+	return axiosInst.post(`compSave`, usParam); 
+	};

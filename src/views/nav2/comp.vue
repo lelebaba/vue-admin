@@ -288,14 +288,12 @@
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							//NProgress.start();
-							let para = Object.assign({}, this.editForm, {
-								all: {
-									page: this.page,
-									name: this.filters.name,
-								},
-							});
+							let para = Object.assign({}, this.editForm);
+							//console.log('para=='+JSON.stringify(para));
+							
 							this.$store.dispatch('editComp', para).then(() => {
 								//NProgress.done();
+								this.getComps();
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
 							});
@@ -351,7 +349,7 @@
 			}
 		},
 		created() {
-			console.log("comp.vue-->调用this.getComps().....");
+			//console.log("comp.vue-->调用this.getComps().....");
 			this.getComps();
 		},
 		// mounted() {

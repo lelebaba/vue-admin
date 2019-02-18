@@ -1,4 +1,4 @@
-import { getCompListAll,getCompListPage} from '../../api/api';
+import { getCompListAll,getCompListPage,saveComp} from '../../api/api';
 import * as types from '../mutation-types';
 
 // TODO: Should not deal with view state in Vuex;
@@ -49,7 +49,8 @@ const actions = {
 	},
 	editComp({ dispatch, commit, state }, para) {
 		state.editLoading = true;
-		editComp(para).then((value) => {
+		console.log('tb--para=='+JSON.stringify(para));
+		saveComp(para).then((value) => {
 			dispatch('editSuccess');
 			//dispatch('getUsersAll');
 			state.editLoading = false;
