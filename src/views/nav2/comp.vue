@@ -16,7 +16,7 @@
 		</el-col>
 
 		<!-- 列表 -->
-		<el-table :data="currentComps" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
+		<el-table :data="currentComps" highlight-current-row v-loading="compListLoading" @selection-change="selsChange"
 		style="width: 100%;">
 			<el-table-column type="selection" width="55">
       </el-table-column>
@@ -172,6 +172,7 @@
 			// },
 			...mapGetters([
 				'comps', // 映射 `this.users` 为 `store.getters.users`
+				'compListLoading',
 				'listLoading',
 				'editLoading',
 				'addLoading',
@@ -180,14 +181,26 @@
 				//首次打开页面取列表时，tableComp中getCompListPage(para).then((value)还没执行完毕
 				//就开始从store.state中取值，此时store.getters.comps为空
 				//如下处理后，当store.getters.comps取到值后，此函数会自动再次执行？
-				if(this.comps){
+				
+				//当tableComp.js中state定义为：
+// 				compObj: {
+// 					data: {},
+// 				},
+				//则不会出现上述问题
+// 				if(this.comps){
+// 					this.total=this.comps.totalNum;
+// 					return this.comps.content;
+// 				}else{
+// 					console.log("this.comps:没取到值 " + this.comps);
+// 					this.total = 0;
+// 					return [];
+// 				}
+					//listLoading为false，compListLoading为true
+					//这就是为什么如果使用listLoading时，加载效果出不来。但什么原因并不清楚。
+					console.log('this.listLoading=='+this.listLoading);
+					console.log('this.compListLoading=='+this.compListLoading);
 					this.total=this.comps.totalNum;
 					return this.comps.content;
-				}else{
-					console.log("this.comps:没取到值 " + this.comps);
-					this.total = 0;
-					return [];
-				}
 			},
 		},
 		methods: {
@@ -293,9 +306,10 @@
 							
 							this.$store.dispatch('editComp', para).then(() => {
 								//NProgress.done();
-								this.getComps();
+								
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
+								//this.getComps();
 							});
 						});
 					}

@@ -89,8 +89,17 @@ export default {
             total: total,
             users: mockUsers,
           }]);
-        }, 1000);
+        }, 0);
       });
+			
+// 			  return new Promise((resolve, reject) => {
+// 			  setTimeout(() => {
+// 			    resolve([200, {
+// 			      total: total,
+// 			      users: mockUsers,
+// 			    }]);
+// 			  }, 1000);
+// 			});
     });
 
 
@@ -143,7 +152,7 @@ export default {
             code: 200,
             msg: '编辑成功'
           }]);
-        }, 500);
+        }, 5500);
       });
     });
 

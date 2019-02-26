@@ -6,16 +6,12 @@ import * as types from '../mutation-types';
 
 // This is just as an Vuex example;
 const state = {
-	compObj: {}
+	compObj: {
+		data: {},
+	},
+	compListLoading: false,
 };
 
-// const getters = {
-// 	comps: state => state.compObj.data,
-// 	total: state => state.compObj.data.totalNum,
-// 	listLoading: state => state.listLoading,
-// 	editLoading: state => state.editLoading,
-// 	addLoading: state => state.addLoading,
-// };
 /**
  * getter有点类似vue.js的计算属性，当我们需要从store的state中派生出一些状态，那么我们就需要使用getter，
  * getter会接收state作为第一个参数，而且getter的返回值会根据它的依赖被缓存起来，
@@ -25,25 +21,27 @@ const state = {
 const getters = {
 	comps: state => {
 		console.log("const getters comps:state.compObj.data====="+JSON.stringify(state.compObj.data));
+		console.log('state.compListLoading=='+state.compListLoading);
+		console.log('state.listLoading=='+state.listLoading);
 		return state.compObj.data;
 		},
 // 	total: state => {
 // 		console.log("const getters total: state.compObj.data=="+JSON.stringify(state.compObj.data));
 // 		return state.compObj.data.totalNum;
 // 		},
-// 	listLoading: state => state.listLoading,
-// 	editLoading: state => state.editLoading,
-// 	addLoading: state => state.addLoading,
+    compListLoading:state => state.compListLoading,
 };
 
 
 const actions = {
 	getComps({ commit, state }, para) {
-		state.listLoading = true;
 		console.log("调用getCompListPage..........");
+		state.listLoading = true;
+		state.compListLoading = true;
 		getCompListPage(para).then((value) => {
 			console.log("getCompListPage:value=="+JSON.stringify(value));
 			commit(types.GET_COMPS, { value });
+			state.compListLoading = false;
 			state.listLoading = false;
 		});
 	},
@@ -52,7 +50,7 @@ const actions = {
 		console.log('tb--para=='+JSON.stringify(para));
 		saveComp(para).then((value) => {
 			dispatch('editSuccess');
-			//dispatch('getUsersAll');
+			dispatch('getComps');
 			state.editLoading = false;
 		});
 	},
@@ -73,7 +71,7 @@ const mutations = {
 // 	},
 	[types.GET_COMPS](state, { value }) {
 		state.compObj = value.data;
-		console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));
+		//console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));
 	},
 
 };

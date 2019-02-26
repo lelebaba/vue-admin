@@ -20,13 +20,21 @@ export const editUser = params => { return axios.get(`${base}/user/edit`, { para
 
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
+
 var axiosInst = axios.create({
   baseURL: 'http://www.mybestiot.com/nb/'
 });
 
 
 export const getCompListAll = params => { return axiosInst.get(`compListAll`, { params: params }); };
-export const getCompListPage = params => { return axiosInst.get(`compList`, { params: params }); };
+export const getCompListPage = params => {
+	return axiosInst.get(`compList`, { params: params });
+// 	 return new Promise((resolve, reject) => {
+// 	  setTimeout(() => {
+// 	    resolve(axiosInst.get(`compList`, { params: params }));
+// 	  }, 5000);
+// 	});
+	};
 export const saveComp = params => { 
 	let usParam = new URLSearchParams();
 	Object.keys(params).forEach(function(key){

@@ -4,7 +4,7 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="待查询的姓名"></el-input>
+					<el-input v-model="filters.name" placeholder="待查询的姓名(table.vue)"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getUsers">查询</el-button>
@@ -16,10 +16,9 @@
 		</el-col>
 
 		<!-- 列表 -->
-		<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
-		style="width: 100%;">
+		<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="55">
-      </el-table-column>
+			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
 			<el-table-column prop="name" label="姓名" width="120" sortable>
@@ -38,20 +37,15 @@
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
-    </el-table>
+		</el-table>
 
-    <!-- 工具条 -->
-			<el-col :span="24" class="toolbar">
-				<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-				<el-pagination
-					layout="sizes, total, prev, pager, next"
-					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:page-sizes="pageSizes"
-					:total="total"
-					style="float:right;">
-				</el-pagination>
-			</el-col>
+		<!-- 工具条 -->
+		<el-col :span="24" class="toolbar">
+			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+			<el-pagination layout="sizes, total, prev, pager, next" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+			 :page-sizes="pageSizes" :total="total" style="float:right;">
+			</el-pagination>
+		</el-col>
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
@@ -113,7 +107,9 @@
 </template>
 <script>
 	import util from '../../common/js/util';
-	import { mapGetters } from 'vuex';
+	import {
+		mapGetters
+	} from 'vuex';
 	//import NProgress from 'nprogress'
 
 	export default {
@@ -136,9 +132,11 @@
 				editFormVisible: false,
 				// editLoading: false,
 				editFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
+					name: [{
+						required: true,
+						message: '请输入姓名',
+						trigger: 'blur'
+					}]
 				},
 
 				// 编辑界面数据
@@ -155,9 +153,11 @@
 				addFormVisible: false,
 				// addLoading: false,
 				addFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
+					name: [{
+						required: true,
+						message: '请输入姓名',
+						trigger: 'blur'
+					}]
 				},
 
 				// 新增界面数据
@@ -179,8 +179,8 @@
 			// },
 			currentUsers() {
 				const start = (this.page - 1) * this.pageSize;
-        const end = this.page * this.pageSize;
-        return this.users.slice(start, end);
+				const end = this.page * this.pageSize;
+				return this.users.slice(start, end);
 			},
 			...mapGetters([
 				'users',
@@ -192,7 +192,7 @@
 		},
 		methods: {
 			// 性别显示转换
-			formatSex: function (row, column) {
+			formatSex: function(row, column) {
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
 			},
 
@@ -225,16 +225,18 @@
 				// });
 				//
 				// this.$store.dispatch('getUsers', { page, name }).then(() => this.listLoading = false;);
-				this.$store.dispatch('getUsers', para);
+				console.log('调用Table.vue.getUsers.........');
+	this.$store.dispatch('getUsers', para);
 			},
 
 			// 获取所有用户列表
 			getUsersAll() {
+				console.log('调用Table.vue.getUsersAll.........');
 				this.$store.dispatch('getUsersAll');
 			},
 
 			// 删除
-			handleDel: function (index, row) {
+			handleDel: function(index, row) {
 				this.$confirm('确认删除该记录吗?', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -273,14 +275,13 @@
 			},
 
 			// 显示编辑界面
-			handleEdit: function (index, row) {
+			handleEdit: function(index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
-				console.log("this.editForm=="+JSON.stringify(this.editForm));
 			},
 
 			// 显示新增界面
-			handleAdd: function () {
+			handleAdd: function() {
 				this.addFormVisible = true;
 				this.addForm = {
 					name: '',
@@ -292,7 +293,7 @@
 			},
 
 			// 编辑
-			editSubmit: function () {
+			editSubmit: function() {
 				this.$refs.editForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -303,7 +304,8 @@
 									name: this.filters.name,
 								},
 							});
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth),
+								'yyyy-MM-dd');
 							this.$store.dispatch('editUser', para).then(() => {
 								//NProgress.done();
 								this.$refs['editForm'].resetFields();
@@ -315,7 +317,7 @@
 			},
 
 			// 新增
-			addSubmit: function () {
+			addSubmit: function() {
 				this.$refs.addForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -326,7 +328,8 @@
 									name: this.filters.name,
 								},
 							});
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth),
+								'yyyy-MM-dd');
 							this.$store.dispatch('addUser', para).then(() => {
 								//NProgress.done();
 								this.$refs['addForm'].resetFields();
@@ -336,18 +339,20 @@
 					}
 				});
 			},
-			selsChange: function (sels) {
+			selsChange: function(sels) {
 				this.sels = sels;
 			},
 
 			// 批量删除
-			batchRemove: function () {
+			batchRemove: function() {
 				var ids = this.sels.map(item => item.id).toString();
 				this.$confirm('确认删除选中记录吗？', '提示', {
 					type: 'warning',
 				}).then(() => {
 					//NProgress.start();
-					let para = Object.assign({}, { ids: ids }, {
+					let para = Object.assign({}, {
+						ids: ids
+					}, {
 						all: {
 							page: this.page,
 							name: this.filters.name,
@@ -356,8 +361,7 @@
 					this.$store.dispatch('batchRemoveUser', para).then((res) => {
 						//NProgress.done();
 					});
-				}).catch(() => {
-				});
+				}).catch(() => {});
 			}
 		},
 		created() {
