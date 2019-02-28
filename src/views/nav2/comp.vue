@@ -10,7 +10,7 @@
 					<el-button type="primary" v-on:click="getComps">查询</el-button>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增</el-button>
+					<el-button type="primary" @click="handleEdit">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -76,32 +76,7 @@
 		</el-dialog>
 
 		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="生日">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="addForm.addr"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-			</div>
-		</el-dialog>
+		
 
 	</section>
 </template>
@@ -116,8 +91,6 @@
 				filters: {
 					name: '',
 				},
-				// users: [],
-				// total: 0,
 				page: 1,
 				pageSize: 5,
 				pageSizes: [5, 10, 30, 50],
@@ -131,36 +104,16 @@
 				// editLoading: false,
 				editFormRules: {
 					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
+						{ required: true, message: '请输入名称', trigger: 'blur' }
+					],
+					tel:[
+						{ required: true, message: '请输入电话', trigger: 'blur' },
+						{ pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码'}
+					],
 				},
 
 				// 编辑界面数据
-				editForm: {
-//					id: 0,
-//					name: '',
-//					tel: '',
-//					linkman: '',
-//					address: '',
-				},
-
-				// 新增界面是否显示
-				addFormVisible: false,
-				// addLoading: false,
-				addFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
-				},
-
-				// 新增界面数据
-				addForm: {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: '',
-				}
+				editForm: {	},
 			}
 		},
 		computed: {
@@ -246,10 +199,14 @@
 					//NProgress.start();
 					let para = {
 						id: row.id,
-						page: this.page,
-						name: this.filters.name,
+						pageInfo:{
+							pageNo: this.page,
+							pageSize: this.pageSize,
+							name: this.filters.name,
+						}
 					};
-					this.$store.dispatch('removeUser', para).then(() => {
+					console.log('..........'+JSON.stringify(para));
+					this.$store.dispatch('removeComp', para).then(() => {
 						console.log('dispatch');
 						this.$message({
 							message: '删除成功',
@@ -280,19 +237,6 @@
 			handleEdit: function (index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
-				console.log("this.editForm=="+JSON.stringify(this.editForm));
-			},
-
-			// 显示新增界面
-			handleAdd: function () {
-				this.addFormVisible = true;
-				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: '',
-				};
 			},
 
 			// 编辑
@@ -323,28 +267,6 @@
 				});
 			},
 
-			// 新增
-			addSubmit: function () {
-				this.$refs.addForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							//NProgress.start();
-							let para = Object.assign({}, this.addForm, {
-								all: {
-									page: this.page,
-									name: this.filters.name,
-								},
-							});
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							this.$store.dispatch('addUser', para).then(() => {
-								//NProgress.done();
-								this.$refs['addForm'].resetFields();
-								this.addFormVisible = false;
-							});
-						});
-					}
-				});
-			},
 			selsChange: function (sels) {
 				this.sels = sels;
 			},

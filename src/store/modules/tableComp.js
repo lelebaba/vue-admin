@@ -1,4 +1,4 @@
-import { getCompListAll,getCompListPage,saveComp} from '../../api/api';
+import { getCompListAll,getCompListPage,saveComp,delComp} from '../../api/api';
 import * as types from '../mutation-types';
 
 // TODO: Should not deal with view state in Vuex;
@@ -55,6 +55,23 @@ const actions = {
 			dispatch('editSuccess');
 			dispatch('getComps',pageInfo);
 			state.editLoading = false;
+		});
+	},
+	removeComp({ dispatch, commit, state }, para) {
+		state.listLoading = true;
+		console.log('removeComp -----para=='+JSON.stringify(para));
+		let pageInfo = para.pageInfo;
+		delete para.pageInfo;
+		return delComp({ id: para.id }).then((value) => {
+			// commit(types.REMOVE_USER, {value});
+			// dispatch('removeUserSuccess');
+			
+			console.log('value == '+JSON.stringify(value));
+			console.log('pageInfo=='+JSON.stringify(pageInfo));
+			dispatch('getComps',pageInfo);
+		}, (res) => {
+			console.log('failure');
+			return Promise.reject(res);
 		});
 	},
 // 	getCompsAll({ commit, state }) {

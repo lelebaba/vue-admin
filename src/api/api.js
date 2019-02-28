@@ -42,3 +42,5 @@ export const saveComp = params => {
 	});
 	return axiosInst.post(`compSave`, usParam); 
 	};
+	
+export const delComp = params => { return axiosInst.get(`compDel`, { params: params }); };

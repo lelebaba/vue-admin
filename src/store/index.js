@@ -14,8 +14,8 @@ const state = {
 export default new Vuex.Store({
 	// mode: 'history',
 	modules: {
-		table,
-		tableComp,
+		t:table,
+		tc:tableComp,
 	},
 	actions,
 	mutations,
