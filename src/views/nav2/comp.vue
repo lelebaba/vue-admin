@@ -301,7 +301,14 @@
 					if (valid) {
 						this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							//NProgress.start();
-							let para = Object.assign({}, this.editForm);
+							//let para = Object.assign({}, this.editForm);
+							let para = Object.assign({}, this.editForm, {
+								pageInfo: {
+									pageNo: this.page,
+									pageSize:this.pageSize,
+									name: this.filters.name,
+								},
+							});
 							//console.log('para=='+JSON.stringify(para));
 							
 							this.$store.dispatch('editComp', para).then(() => {
