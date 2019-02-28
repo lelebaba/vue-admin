@@ -47,10 +47,10 @@ const actions = {
 	},
 	editComp({ dispatch, commit, state }, para) {
 		state.editLoading = true;
-		console.log('tb--para==before delete pageInfo::'+JSON.stringify(para));
+		//console.log('tb--para==before delete pageInfo::'+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
 		delete para.pageInfo;
-		console.log('tb--para==after delete pageInfo::'+JSON.stringify(para));
+		//console.log('tb--para==after delete pageInfo::'+JSON.stringify(para));
 		saveComp(para).then((value) => {
 			dispatch('editSuccess');
 			dispatch('getComps',pageInfo);
