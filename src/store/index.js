@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import table from './modules/table';
 import tableComp from './modules/tableComp';
+import tableUser from './modules/tableUser';
 import actions from './actions.js';
 import mutations from './mutations.js';
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
 	modules: {
 		t:table,
 		tc:tableComp,
+		tu:tableUser
 	},
 	actions,
 	mutations,

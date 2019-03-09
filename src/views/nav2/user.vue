@@ -4,10 +4,10 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="请输入公司名称"></el-input>
+					<el-input v-model="filters.name" placeholder="系统管理-用户"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getComps">查询</el-button>
+					<el-button type="primary" v-on:click="getUsers()">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleEdit">新增</el-button>
@@ -16,19 +16,19 @@
 		</el-col>
 
 		<!-- 列表 -->
-		<el-table :data="currentComps" highlight-current-row v-loading="compListLoading" @selection-change="selsChange"
+		<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
 		style="width: 100%;">
 			<el-table-column type="selection" width="55">
       </el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="名称" width="250" sortable>
+			<el-table-column prop="name" label="登录名" width="250" sortable>
 			</el-table-column>
-			<el-table-column prop="tel" label="电话" width="150" sortable>
+			<el-table-column prop="name" label="显示名" width="250" sortable>
 			</el-table-column>
-			<el-table-column prop="linkman" label="联系人" width="100" sortable>
+			<el-table-column prop="tel" label="手机号" width="150" sortable>
 			</el-table-column>
-			<el-table-column prop="address" label="地址" width="180" sortable>
+			<el-table-column prop="linkman" label="所属公司" width="100" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template slot-scope="scope">
@@ -56,7 +56,7 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="名称" prop="name">
+				<el-form-item label="显示名" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="电话" prop="tel">
@@ -124,13 +124,11 @@
 			// 	return this.$store.getters.users;
 			// },
 			...mapGetters([
-				'comps', // 映射 `this.users` 为 `store.getters.users`
-				'compListLoading',
+				'users', // 映射 `this.users` 为 `store.getters.users`
 				'listLoading',
 				'editLoading',
-				'addLoading',
 			]),
-			currentComps() {
+			currentUsers() {
 				//首次打开页面取列表时，tableComp中getCompListPage(para).then((value)还没执行完毕
 				//就开始从store.state中取值，此时store.getters.comps为空
 				//如下处理后，当store.getters.comps取到值后，此函数会自动再次执行？
@@ -151,9 +149,8 @@
 					//listLoading为false，compListLoading为true
 					//这就是为什么如果使用listLoading时，加载效果出不来。但什么原因并不清楚。
 					console.log('this.listLoading=='+this.listLoading);
-					console.log('this.compListLoading=='+this.compListLoading);
-					this.total=this.comps.totalNum;
-					return this.comps.content;
+					this.total=this.users.totalNum;
+					return this.users.content;
 			},
 		},
 		methods: {
@@ -166,23 +163,23 @@
 			handleSizeChange(val) {
 				console.log(`每页 ${val} 条`);
 				this.pageSize = val;
-				this.getComps();
+				this.getUsers();
 			},
 
 			// 翻页
 			handleCurrentChange(val) {
 				console.log(`当前是 ${val} 页`);
 				this.page = val;
-				this.getComps();
+				this.getUsers();
 			},
 			
-			getComps() {
+			getUsers(){
 				let para = {
 					pageNo: this.page,
 					pageSize:this.pageSize,
 					name: this.filters.name,
 				};
-				this.$store.dispatch('getComps',para);
+				this.$store.dispatch('getUsers',para);
 			},
 
 			// 删除
@@ -200,7 +197,7 @@
 							name: this.filters.name,
 						}
 					};
-					this.$store.dispatch('removeComp', para).then(() => {
+					this.$store.dispatch('removeUser', para).then(() => {
 						console.log('dispatch');
 						this.$message({
 							message: '删除成功',
@@ -239,7 +236,7 @@
 								},
 							});
 							
-							this.$store.dispatch('editComp', para).then(() => {
+							this.$store.dispatch('editUser', para).then(() => {
 								
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
@@ -276,7 +273,7 @@
 		},
 		created() {
 			//console.log("comp.vue-->调用this.getComps().....");
-			this.getComps();
+			this.getUsers();
 		},
 		// mounted() {
 		// 	this.getUsers();

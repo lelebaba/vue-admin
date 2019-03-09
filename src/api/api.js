@@ -44,3 +44,6 @@ export const saveComp = params => {
 	};
 	
 export const delComp = params => { return axiosInst.get(`compDel`, { params: params }); };
+
+
+export const getUsersPage = params => {	return axiosInst.get(`userList`, { params: params }); };

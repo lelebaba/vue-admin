@@ -1,4 +1,4 @@
-import { getCompListAll,getCompListPage,saveComp,delComp} from '../../api/api';
+import { getUsersPage} from '../../api/api';
 import * as types from '../mutation-types';
 
 // TODO: Should not deal with view state in Vuex;
@@ -6,10 +6,11 @@ import * as types from '../mutation-types';
 
 // This is just as an Vuex example;
 const state = {
-	compObj: {
+	userObj: {
 		data: {},
 	},
-	compListLoading: false,
+	listLoading: false,
+	editLoading:false,
 };
 
 /**
@@ -19,56 +20,51 @@ const state = {
  */  
 
 const getters = {
-	comps: state => {
-		console.log("const getters comps:state.compObj.data====="+JSON.stringify(state.compObj.data));
-		console.log('state.compListLoading=='+state.compListLoading);
-		console.log('state.listLoading=='+state.listLoading);
-		return state.compObj.data;
+	users: state => {
+		return state.userObj.data;
 		},
 // 	total: state => {
 // 		console.log("const getters total: state.compObj.data=="+JSON.stringify(state.compObj.data));
 // 		return state.compObj.data.totalNum;
 // 		},
-    compListLoading:state => state.compListLoading,
+    listLoading:state => state.listLoading,
 };
 
 
 const actions = {
-	getComps({ commit, state }, para) {
-		console.log("调用getCompListPage..........");
+	getUsers({ commit, state }, para) {
+		//console.log("调用getCompListPage..........");
 		state.listLoading = true;
-		state.compListLoading = true;
-		getCompListPage(para).then((value) => {
-			console.log("getCompListPage:value=="+JSON.stringify(value));
-			commit(types.GET_COMPS, { value });
-			state.compListLoading = false;
+		getUsersPage(para).then((value) => {
+			//console.log("getCompListPage:value=="+JSON.stringify(value));
+			commit(types.GET_USERS, { value });
 			state.listLoading = false;
 		});
 	},
-	editComp({ dispatch, commit, state }, para) {
+	editUser({ dispatch, commit, state }, para) {
 		state.editLoading = true;
 		//console.log('tb--para==before delete pageInfo::'+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
 		delete para.pageInfo;
 		//console.log('tb--para==after delete pageInfo::'+JSON.stringify(para));
-		saveComp(para).then((value) => {
+		saveUser(para).then((value) => {
 			dispatch('editSuccess');
-			dispatch('getComps',pageInfo);
+			dispatch('getUsers',pageInfo);
 			state.editLoading = false;
 		});
 	},
-	removeComp({ dispatch, commit, state }, para) {
+	removeUser({ dispatch, commit, state }, para) {
 		state.listLoading = true;
-		console.log('removeComp -----para=='+JSON.stringify(para));
+		//console.log('removeComp -----para=='+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
 		delete para.pageInfo;
-		return delComp({ id: para.id }).then((value) => {
+		return delUser({ id: para.id }).then((value) => {
 			// commit(types.REMOVE_USER, {value});
 			// dispatch('removeUserSuccess');
 			
-			console.log('value == '+JSON.stringify(value));
-			console.log('pageInfo=='+JSON.stringify(pageInfo));
-			dispatch('getComps',pageInfo);
+			//console.log('value == '+JSON.stringify(value));
+			//console.log('pageInfo=='+JSON.stringify(pageInfo));
+			dispatch('getUsers',pageInfo);
 		}, (res) => {
 			console.log('failure');
 			return Promise.reject(res);
@@ -81,8 +77,8 @@ const mutations = {
 // 		state.compObj = value.data;
 // 		//console.log("state.compObj: " + JSON.stringify(state.compObj));
 // 	},
-	[types.GET_COMPS](state, { value }) {
-		state.compObj = value.data;
+	[types.GET_USERS](state, { value }) {
+		state.userObj = value.data;
 		//console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));
 	},
 
