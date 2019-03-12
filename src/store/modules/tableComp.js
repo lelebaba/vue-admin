@@ -9,6 +9,7 @@ const state = {
 	compObj: {
 		data: {},
 	},
+	compAllObj:{data:{},},
 	compListLoading: false,
 };
 
@@ -73,14 +74,23 @@ const actions = {
 			console.log('failure');
 			return Promise.reject(res);
 		});
-	}
+	},
+	getCompsAll({ commit, state }, para) {
+		console.log("调用getCompListAll..........");
+		getCompListAll(para).then((value) => {
+			console.log("getCompListAll:value=="+JSON.stringify(value));
+			commit(types.GET_COMPS_ALL, { value });
+			state.compListLoading = false;
+			state.listLoading = false;
+		});
+	},
 };
 
 const mutations = {
-// 	[types.GET_COMPS_ALL](state, { value }) {
-// 		state.compObj = value.data;
-// 		//console.log("state.compObj: " + JSON.stringify(state.compObj));
-// 	},
+	[types.GET_COMPS_ALL](state, { value }) {
+		state.compAllObj = value.data;
+		console.log("state.compAllObj: " + JSON.stringify(state.compAllObj));
+	},
 	[types.GET_COMPS](state, { value }) {
 		state.compObj = value.data;
 		//console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));

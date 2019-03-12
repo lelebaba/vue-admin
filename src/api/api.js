@@ -28,12 +28,12 @@ var axiosInst = axios.create({
 
 export const getCompListAll = params => { return axiosInst.get(`compListAll`, { params: params }); };
 export const getCompListPage = params => {
-	return axiosInst.get(`compList`, { params: params });
-// 	 return new Promise((resolve, reject) => {
-// 	  setTimeout(() => {
-// 	    resolve(axiosInst.get(`compList`, { params: params }));
-// 	  }, 5000);
-// 	});
+	//return axiosInst.get(`compList`, { params: params });
+	 return new Promise((resolve, reject) => {
+	  setTimeout(() => {
+	    resolve(axiosInst.get(`compList`, { params: params }));
+	  }, 2000);
+	});
 	};
 export const saveComp = params => { 
 	let usParam = new URLSearchParams();
@@ -46,4 +46,12 @@ export const saveComp = params => {
 export const delComp = params => { return axiosInst.get(`compDel`, { params: params }); };
 
 
-export const getUsersPage = params => {	return axiosInst.get(`userList`, { params: params }); };
+export const getUsersPage = params => {	
+	//return axiosInst.get(`userList`, { params: params }); 
+	return new Promise((resolve, reject) => {
+	  setTimeout(() => {
+	    resolve(axiosInst.get(`userList`, { params: params }));
+	  }, 500);
+	});
+	
+	};

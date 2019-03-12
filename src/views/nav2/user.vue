@@ -4,7 +4,7 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="系统管理-用户"></el-input>
+					<el-input v-model="filters.name" placeholder="用户姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" v-on:click="getUsers()">查询</el-button>
@@ -22,13 +22,13 @@
       </el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="登录名" width="250" sortable>
+			<el-table-column prop="logname" label="登录名" width="180" sortable>
 			</el-table-column>
-			<el-table-column prop="name" label="显示名" width="250" sortable>
+			<el-table-column prop="name" label="显示名" width="180" sortable>
 			</el-table-column>
-			<el-table-column prop="tel" label="手机号" width="150" sortable>
+			<el-table-column prop="mobile" label="手机号" width="150" sortable>
 			</el-table-column>
-			<el-table-column prop="linkman" label="所属公司" width="100" sortable>
+			<el-table-column prop="compName" label="所属公司" width="250" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template slot-scope="scope">
@@ -56,17 +56,19 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+				<el-form-item label="登录名" prop="logname">
+					<el-input v-model="editForm.logname" auto-complete="off"></el-input>
+				</el-form-item>
 				<el-form-item label="显示名" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="电话" prop="tel">
-					<el-input v-model="editForm.tel" auto-complete="off"></el-input>
+				<el-form-item label="手机号">
+					<el-input v-model="editForm.mobile" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="联系人">
-					<el-input v-model="editForm.linkman" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="地址">
-					<el-input type="textarea" v-model="editForm.address"></el-input>
+				<el-form-item label="所属公司">
+					<el-select v-model="editForm.compid" placeholder="请选择所属公司">
+						 <el-option v-for="(item,index) in comps" :key="index"  :label="item.name" :value="item.id"></el-option>
+					</el-select>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -117,17 +119,26 @@
 			}
 		},
 		computed: {
-			// users() {
-			// 	if (!this.$store.getters.users.length) {
-			// 		return this.getUsers();
-			// 	}
-			// 	return this.$store.getters.users;
-			// },
-			...mapGetters([
-				'users', // 映射 `this.users` 为 `store.getters.users`
-				'listLoading',
-				'editLoading',
-			]),
+			comps(){
+				let compList = this.$store.state.tc.compAllObj.data;
+				console.log('compList=='+JSON.stringify(compList));
+				return compList;
+			},
+			//试验使用function+mapGetters的形式，完全可以
+			//mapGetter可以不要，也就是说，vuex的store并不一定非要getter来获取值
+			//getter获取值时，因为其变量是全局的，所以不能重复定义
+			//而state中的变量是局部的，这就导致：
+			//当state中可以定义与别的module中同名的变量，但当要经由getter送出时，则必须重新定义一个新的变量，再将state中变量传递给它
+			users() {
+				//console.log('users==00000000');
+				return this.$store.state.tu.userObj.data;
+			},
+			
+			...mapGetters({
+				//users:'usersNew', // 映射 `this.users` 为 `store.getters.users`
+				listLoading:'listLoadingNew',
+				editLoading:'editLoadingNew',
+			}),
 			currentUsers() {
 				//首次打开页面取列表时，tableComp中getCompListPage(para).then((value)还没执行完毕
 				//就开始从store.state中取值，此时store.getters.comps为空
@@ -148,7 +159,8 @@
 // 				}
 					//listLoading为false，compListLoading为true
 					//这就是为什么如果使用listLoading时，加载效果出不来。但什么原因并不清楚。
-					console.log('this.listLoading=='+this.listLoading);
+					//console.log('this.listLoading==--==--'+this.listLoading);
+					//console.log('this.users==--==--'+JSON.stringify(this.users));
 					this.total=this.users.totalNum;
 					return this.users.content;
 			},
@@ -179,6 +191,7 @@
 					pageSize:this.pageSize,
 					name: this.filters.name,
 				};
+				console.log('time=='+new Date().toLocaleDateString());
 				this.$store.dispatch('getUsers',para);
 			},
 
@@ -217,6 +230,16 @@
 
 			// 显示编辑界面
 			handleEdit: function (index, row) {
+				this.$store.dispatch('getCompsAll');
+				
+				//使用这种方法时，是在data中定义一个comps，然后在这里给comps赋值
+				//但由于$store.dispatch是异步执行，所以还没执行完时，下面语句就执行了
+				//导致this.comps为空值，所以不能用这种方法，
+				//而是采用在computed中定义comps方法,这样，只有state中值变化后才触发return
+				//相当于是this.$store.dispatch('getCompsAll');方法的回调
+				// this.comps = this.$store.state.tc.compAllObj.data;
+				// console.log('this.comps==--=====++++'+JSON.stringify(this.comps));
+				
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
 			},

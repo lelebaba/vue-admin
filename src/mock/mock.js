@@ -89,7 +89,7 @@ export default {
             total: total,
             users: mockUsers,
           }]);
-        }, 0);
+        }, 1000);
       });
 			
 // 			  return new Promise((resolve, reject) => {

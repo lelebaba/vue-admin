@@ -20,24 +20,25 @@ const state = {
  */  
 
 const getters = {
-	users: state => {
+	usersNew: state => {
 		return state.userObj.data;
 		},
 // 	total: state => {
 // 		console.log("const getters total: state.compObj.data=="+JSON.stringify(state.compObj.data));
 // 		return state.compObj.data.totalNum;
 // 		},
-    listLoading:state => state.listLoading,
+    listLoadingNew:state => state.listLoading,
+	editLoadingNew:state => state.editLoading,
 };
 
 
 const actions = {
 	getUsers({ commit, state }, para) {
-		//console.log("调用getCompListPage..........");
+		console.log("调用getUsersPage..........");
 		state.listLoading = true;
 		getUsersPage(para).then((value) => {
 			//console.log("getCompListPage:value=="+JSON.stringify(value));
-			commit(types.GET_USERS, { value });
+			commit(types.GET_USERS_NEW, { value });
 			state.listLoading = false;
 		});
 	},
@@ -77,7 +78,7 @@ const mutations = {
 // 		state.compObj = value.data;
 // 		//console.log("state.compObj: " + JSON.stringify(state.compObj));
 // 	},
-	[types.GET_USERS](state, { value }) {
+	[types.GET_USERS_NEW](state, { value }) {
 		state.userObj = value.data;
 		//console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));
 	},
