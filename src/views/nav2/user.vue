@@ -86,7 +86,6 @@
 	import util from '../../common/js/util';
 	import { mapGetters } from 'vuex';
 	//import NProgress from 'nprogress'
-
 	export default {
 		data() {
 			return {
