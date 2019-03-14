@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="用户姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers()">查询</el-button>
+					<el-button type="primary" v-on:click="getSysUsers()">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleEdit">新增</el-button>
@@ -104,10 +104,13 @@
 				editFormVisible: false,
 				// editLoading: false,
 				editFormRules: {
-					name: [
-						{ required: true, message: '请输入名称', trigger: 'blur' }
+					logname: [
+						{ required: true, message: '请输入登录名', trigger: 'blur' }
 					],
-					tel:[
+					name: [
+						{ required: true, message: '请输入姓名', trigger: 'blur' }
+					],
+					mobile:[
 						{ required: true, message: '请输入电话', trigger: 'blur' },
 						{ pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码'}
 					],
@@ -128,7 +131,7 @@
 			//getter获取值时，因为其变量是全局的，所以不能重复定义
 			//而state中的变量是局部的，这就导致：
 			//当state中可以定义与别的module中同名的变量，但当要经由getter送出时，则必须重新定义一个新的变量，再将state中变量传递给它
-			users() {
+			sysUsers() {
 				//console.log('users==00000000');
 				return this.$store.state.tu.userObj.data;
 			},
@@ -160,8 +163,8 @@
 					//这就是为什么如果使用listLoading时，加载效果出不来。但什么原因并不清楚。
 					//console.log('this.listLoading==--==--'+this.listLoading);
 					//console.log('this.users==--==--'+JSON.stringify(this.users));
-					this.total=this.users.totalNum;
-					return this.users.content;
+					this.total=this.sysUsers.totalNum;
+					return this.sysUsers.content;
 			},
 		},
 		methods: {
@@ -174,24 +177,24 @@
 			handleSizeChange(val) {
 				console.log(`每页 ${val} 条`);
 				this.pageSize = val;
-				this.getUsers();
+				this.getSysUsers();
 			},
 
 			// 翻页
 			handleCurrentChange(val) {
 				console.log(`当前是 ${val} 页`);
 				this.page = val;
-				this.getUsers();
+				this.getSysUsers();
 			},
 			
-			getUsers(){
+			getSysUsers(){
 				let para = {
 					pageNo: this.page,
 					pageSize:this.pageSize,
 					name: this.filters.name,
 				};
 				//console.log('time=='+new Date().toLocaleDateString());
-				this.$store.dispatch('getUsers',para);
+				this.$store.dispatch('getSysUsers',para);
 			},
 
 			// 删除
@@ -209,7 +212,7 @@
 							name: this.filters.name,
 						}
 					};
-					this.$store.dispatch('removeUser', para).then(() => {
+					this.$store.dispatch('removeSysUser', para).then(() => {
 						console.log('dispatch');
 						this.$message({
 							message: '删除成功',
@@ -258,7 +261,7 @@
 								},
 							});
 							
-							this.$store.dispatch('editUser', para).then(() => {
+							this.$store.dispatch('editSysUser', para).then(() => {
 								
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
@@ -295,7 +298,7 @@
 		},
 		created() {
 			//console.log("comp.vue-->调用this.getComps().....");
-			this.getUsers();
+			this.getSysUsers();
 		},
 		// mounted() {
 		// 	this.getUsers();

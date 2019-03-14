@@ -59,7 +59,8 @@ const actions = {
 		});
 	},
 	editUser({ dispatch, commit, state }, para) {
-		state.editLoading = true;
+		console.log('==@@@@@@@@@@');
+	state.editLoading = true;
 		editUser(para).then((value) => {
 			dispatch('editUserSuccess');
 			dispatch('getUsersAll');

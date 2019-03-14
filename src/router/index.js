@@ -10,7 +10,7 @@ import Echarts from '../views/charts/Echarts.vue'
 import Comp from '../views/nav2/comp.vue'
 import Device from '../views/nav2/device.vue'
 import Server from '../views/nav2/server.vue'
-import user from '../views/nav2/user.vue'
+import sysUser from '../views/nav2/sysUser.vue'
 
 Vue.use(Router);
 
@@ -48,7 +48,7 @@ let routes = [
       iconCls: 'fa fa-id-card-o',
       children: [
           { path: 'comp', component: Comp, name: '公司管理' },
-					{ path: 'user', component: user, name: '用户管理' },
+					{ path: 'sysUser', component: sysUser, name: '用户管理' },
 					{ path: 'server', component: Server, name: '服务器管理' },
           { path: 'device', component: Device, name: '设备管理' }
       ]

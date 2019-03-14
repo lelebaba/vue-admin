@@ -20,29 +20,27 @@ const state = {
  */  
 
 const getters = {
-	usersNew: state => {
-		return state.userObj.data;
-		},
-// 	total: state => {
-// 		console.log("const getters total: state.compObj.data=="+JSON.stringify(state.compObj.data));
-// 		return state.compObj.data.totalNum;
-// 		},
+	//可以不用getter，直接在vue中取到state中的userObj
+// 	usersNew: state => {
+// 		return state.userObj.data;
+// 	},
+
     listLoadingNew:state => state.listLoading,
 	editLoadingNew:state => state.editLoading,
 };
 
 
 const actions = {
-	getUsers({ commit, state }, para) {
+	getSysUsers({ commit, state }, para) {
 		console.log("调用getUsersPage..........");
 		state.listLoading = true;
 		getUsersPage(para).then((value) => {
 			//console.log("getCompListPage:value=="+JSON.stringify(value));
-			commit(types.GET_USERS_NEW, { value });
+			commit(types.GET_SYS_USERS, { value });
 			state.listLoading = false;
 		});
 	},
-	editUser({ dispatch, commit, state }, para) {
+	editSysUser({ dispatch, commit, state }, para) {
 		state.editLoading = true;
 		//console.log('tb--para==before delete pageInfo::'+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
@@ -50,11 +48,11 @@ const actions = {
 		console.log('tbUsers--para==after delete pageInfo::'+JSON.stringify(para));
 		saveUser(para).then((value) => {
 			dispatch('editSuccess');
-			dispatch('getUsers',pageInfo);
+			dispatch('getSysUsers',pageInfo);
 			state.editLoading = false;
 		});
 	},
-	removeUser({ dispatch, commit, state }, para) {
+	removeSysUser({ dispatch, commit, state }, para) {
 		state.listLoading = true;
 		//console.log('removeComp -----para=='+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
@@ -65,7 +63,7 @@ const actions = {
 			
 			//console.log('value == '+JSON.stringify(value));
 			//console.log('pageInfo=='+JSON.stringify(pageInfo));
-			dispatch('getUsers',pageInfo);
+			dispatch('getSysUsers',pageInfo);
 		}, (res) => {
 			console.log('failure');
 			return Promise.reject(res);
@@ -74,13 +72,8 @@ const actions = {
 };
 
 const mutations = {
-// 	[types.GET_COMPS_ALL](state, { value }) {
-// 		state.compObj = value.data;
-// 		//console.log("state.compObj: " + JSON.stringify(state.compObj));
-// 	},
-	[types.GET_USERS_NEW](state, { value }) {
+	[types.GET_SYS_USERS](state, { value }) {
 		state.userObj = value.data;
-		//console.log("mutations==>tate.compObj: " + JSON.stringify(state.compObj.data.totalNum));
 	},
 
 };

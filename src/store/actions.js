@@ -6,7 +6,7 @@ export default {
 		commit(types.SUCCESSFUL_MESSAGE, { messages: messages });
 	},
 	editUserSuccess({ commit }) {
-		const messages = '提交成功!';
+		const messages = '提交成功!!!';
 		commit(types.SUCCESSFUL_MESSAGE, { messages: messages });
 	},
 	addUserSuccess({ commit }) {
