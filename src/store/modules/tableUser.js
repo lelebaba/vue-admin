@@ -1,4 +1,4 @@
-import { getUsersPage} from '../../api/api';
+import { getUsersPage,saveUser,delUser} from '../../api/api';
 import * as types from '../mutation-types';
 
 // TODO: Should not deal with view state in Vuex;
@@ -47,7 +47,7 @@ const actions = {
 		//console.log('tb--para==before delete pageInfo::'+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
 		delete para.pageInfo;
-		//console.log('tb--para==after delete pageInfo::'+JSON.stringify(para));
+		console.log('tbUsers--para==after delete pageInfo::'+JSON.stringify(para));
 		saveUser(para).then((value) => {
 			dispatch('editSuccess');
 			dispatch('getUsers',pageInfo);

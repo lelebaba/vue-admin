@@ -54,4 +54,14 @@ export const getUsersPage = params => {
 	  }, 500);
 	});
 	
+};
+	
+export const saveUser = params => { 
+	let usParam = new URLSearchParams();
+	Object.keys(params).forEach(function(key){
+		usParam.append(key,params[key]);
+	});
+	return axiosInst.post(`userSave`, usParam); 
 	};
+	
+export const delUser = params => { return axiosInst.get(`userDel`, { params: params }); };

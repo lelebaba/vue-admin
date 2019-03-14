@@ -54,7 +54,7 @@
 			</el-col>
 
 		<!--编辑界面-->
-		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
 				<el-form-item label="登录名" prop="logname">
 					<el-input v-model="editForm.logname" auto-complete="off"></el-input>
@@ -120,7 +120,7 @@
 		computed: {
 			comps(){
 				let compList = this.$store.state.tc.compAllObj.data;
-				console.log('compList=='+JSON.stringify(compList));
+				//console.log('compList=='+JSON.stringify(compList));
 				return compList;
 			},
 			//试验使用function+mapGetters的形式，完全可以
@@ -190,7 +190,7 @@
 					pageSize:this.pageSize,
 					name: this.filters.name,
 				};
-				console.log('time=='+new Date().toLocaleDateString());
+				//console.log('time=='+new Date().toLocaleDateString());
 				this.$store.dispatch('getUsers',para);
 			},
 

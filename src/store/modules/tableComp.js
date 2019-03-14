@@ -21,26 +21,20 @@ const state = {
 
 const getters = {
 	comps: state => {
-		console.log("const getters comps:state.compObj.data====="+JSON.stringify(state.compObj.data));
-		console.log('state.compListLoading=='+state.compListLoading);
-		console.log('state.listLoading=='+state.listLoading);
 		return state.compObj.data;
 		},
-// 	total: state => {
-// 		console.log("const getters total: state.compObj.data=="+JSON.stringify(state.compObj.data));
-// 		return state.compObj.data.totalNum;
-// 		},
+
     compListLoading:state => state.compListLoading,
 };
 
 
 const actions = {
 	getComps({ commit, state }, para) {
-		console.log("调用getCompListPage..........");
+		//console.log("调用getCompListPage..........");
 		state.listLoading = true;
 		state.compListLoading = true;
 		getCompListPage(para).then((value) => {
-			console.log("getCompListPage:value=="+JSON.stringify(value));
+			//console.log("getCompListPage:value=="+JSON.stringify(value));
 			commit(types.GET_COMPS, { value });
 			state.compListLoading = false;
 			state.listLoading = false;
@@ -60,7 +54,7 @@ const actions = {
 	},
 	removeComp({ dispatch, commit, state }, para) {
 		state.listLoading = true;
-		console.log('removeComp -----para=='+JSON.stringify(para));
+		//console.log('removeComp -----para=='+JSON.stringify(para));
 		let pageInfo = para.pageInfo;
 		delete para.pageInfo;
 		return delComp({ id: para.id }).then((value) => {
@@ -76,9 +70,9 @@ const actions = {
 		});
 	},
 	getCompsAll({ commit, state }, para) {
-		console.log("调用getCompListAll..........");
+		//console.log("调用getCompListAll..........");
 		getCompListAll(para).then((value) => {
-			console.log("getCompListAll:value=="+JSON.stringify(value));
+			//console.log("getCompListAll:value=="+JSON.stringify(value));
 			commit(types.GET_COMPS_ALL, { value });
 			state.compListLoading = false;
 			state.listLoading = false;
@@ -89,7 +83,7 @@ const actions = {
 const mutations = {
 	[types.GET_COMPS_ALL](state, { value }) {
 		state.compAllObj = value.data;
-		console.log("state.compAllObj: " + JSON.stringify(state.compAllObj));
+		//console.log("state.compAllObj: " + JSON.stringify(state.compAllObj));
 	},
 	[types.GET_COMPS](state, { value }) {
 		state.compObj = value.data;
