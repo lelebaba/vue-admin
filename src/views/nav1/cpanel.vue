@@ -1,82 +1,32 @@
 <template>
 	<section>
-		<!-- 工具条 -->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.name" placeholder="用户姓名"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="getSysUsers()">查询</el-button>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click="handleEdit">新增</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
-
+	<el-row>
+		<el-col :span="12" style="border: #475669 solid 1px;">
+			<div  class="toolbar" style="margin: 0px;height: 30px; background-color: cadetblue;">这是标题</div>
 		<!-- 列表 -->
-		<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange">
-		<el-table-column type="selection" >     </el-table-column>
-			<el-table-column type="index" >
-			</el-table-column>
-			<el-table-column prop="logname" label="登录名"  sortable>
-			</el-table-column>
-			<el-table-column prop="name" label="显示名"  sortable>
-			</el-table-column>
-			<el-table-column prop="mobile" label="手机号"  sortable>
-			</el-table-column>
-			<el-table-column prop="compName" label="所属公司"  sortable>
-			</el-table-column>
-			<el-table-column label="操作" >
-				<template slot-scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-				</template>
-			</el-table-column>
-    </el-table>
-
-    <!-- 工具条 -->
-			<el-col :span="24" class="toolbar">
-				<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-				<el-pagination
-					layout="sizes, total, prev, pager, next"
-					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:current-page="page"
-					:page-sizes="pageSizes"
-					:page-size="pageSize"
-					:total="total"
-					style="float:right;">
-				</el-pagination>
-			</el-col>
-
-		<!--编辑界面-->
-		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="登录名" prop="logname">
-					<el-input v-model="editForm.logname" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="显示名" prop="name">
-					<el-input v-model="editForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="手机号">
-					<el-input v-model="editForm.mobile" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="所属公司">
-					<el-select v-model="editForm.compid" placeholder="请选择所属公司">
-						 <el-option v-for="(item,index) in comps" :key="index"  :label="item.name" :value="item.id"></el-option>
-					</el-select>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-			</div>
-		</el-dialog>
-
-		<!--新增界面-->
+			<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange">
+			<el-table-column type="selection" >     </el-table-column>
+				<el-table-column type="index" >
+				</el-table-column>
+				<el-table-column prop="logname" label="登录名"  sortable>
+				</el-table-column>
+				<el-table-column prop="name" label="显示名"  sortable>
+				</el-table-column>
+				<el-table-column prop="mobile" label="手机号"  sortable>
+				</el-table-column>
+				<el-table-column prop="compName" label="所属公司"  sortable>
+				</el-table-column>
+				<el-table-column label="操作" >
+					<template slot-scope="scope">
+						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+						<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					</template>
+				</el-table-column>
+		</el-table>
 		
+		</el-col>
+		<el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
+	</el-row>
 
 	</section>
 </template>
@@ -140,27 +90,6 @@
 				editLoading:'editLoadingNew',
 			}),
 			currentUsers() {
-				//首次打开页面取列表时，tableComp中getCompListPage(para).then((value)还没执行完毕
-				//就开始从store.state中取值，此时store.getters.comps为空
-				//如下处理后，当store.getters.comps取到值后，此函数会自动再次执行？
-				
-				//当tableComp.js中state定义为：
-// 				compObj: {
-// 					data: {},
-// 				},
-				//则不会出现上述问题
-// 				if(this.comps){
-// 					this.total=this.comps.totalNum;
-// 					return this.comps.content;
-// 				}else{
-// 					console.log("this.comps:没取到值 " + this.comps);
-// 					this.total = 0;
-// 					return [];
-// 				}
-					//listLoading为false，compListLoading为true
-					//这就是为什么如果使用listLoading时，加载效果出不来。但什么原因并不清楚。
-					//console.log('this.listLoading==--==--'+this.listLoading);
-					//console.log('this.users==--==--'+JSON.stringify(this.users));
 					this.total=this.sysUsers.totalNum;
 					return this.sysUsers.content;
 			},

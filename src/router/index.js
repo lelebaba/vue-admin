@@ -11,6 +11,7 @@ import Comp from '../views/nav2/comp.vue'
 import Device from '../views/nav2/device.vue'
 import Server from '../views/nav2/server.vue'
 import sysUser from '../views/nav2/sysUser.vue'
+import cpanel from '../views/nav1/cpanel.vue'
 
 Vue.use(Router);
 
@@ -37,7 +38,8 @@ let routes = [
     iconCls: 'el-icon-message',
     children: [
       // { path: '/main', component: Main, name: '主页', hidden: true },
-      { path: 'table', component: Table, name: '控制面板' },
+      //{ path: 'table', component: Table, name: '控制面板' },
+			{ path: 'cpanel', component: cpanel, name: '控制面板' },
       { path: 'form', component: Form, name: '数据列表' }
     ],
   },

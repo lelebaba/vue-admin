@@ -77,7 +77,7 @@
                 });
               } else {
                 sessionStorage.setItem('user', JSON.stringify(user));
-								this.$router.push({ path: '/table' });
+								this.$router.push({ path: '/cpanel' });
               }
             });
           } else {
