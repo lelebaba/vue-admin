@@ -24,6 +24,7 @@
 <script>
   import { requestLogin } from '../api/api';
 	import Mock from 'mockjs';
+	import md5 from 'js-md5';
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -62,21 +63,21 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = {
-              username: this.ruleForm2.account,
-              password: this.ruleForm2.checkPass,
+              logname: this.ruleForm2.account,
+              pwd: md5(this.ruleForm2.checkPass),
             };
             requestLogin(loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
 							console.log("xxx=="+JSON.stringify(data));
-              let { msg, code, user } = data;
-              if (code !== 200) {
+              let { message, success, sessMap } = data;
+              if (success !== true) {
                 this.$message({
-                  message: msg,
+                  message: message,
                   type: 'error',
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
+                sessionStorage.setItem('user', JSON.stringify(sessMap.user));
 								this.$router.push({ path: '/cpanel' });
               }
             });

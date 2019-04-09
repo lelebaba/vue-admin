@@ -1,31 +1,59 @@
 <template>
 	<section>
 	<el-row>
-		<el-col :span="12" style="border: #475669 solid 1px;">
-			<div  class="toolbar" style="margin: 0px;height: 30px; background-color: cadetblue;">这是标题</div>
+		<el-col :span="11" class="frcol">
+			<div  class="frtitle"><h4>设备列表</h4></div>
 		<!-- 列表 -->
-			<el-table :data="currentUsers" highlight-current-row v-loading="listLoading" @selection-change="selsChange">
+			<el-table :data="curDevs" highlight-current-row v-loading="listLoading" @selection-change="selsChange">
 			<el-table-column type="selection" >     </el-table-column>
-				<el-table-column type="index" >
+				<el-table-column prop="id" label="设备号">
 				</el-table-column>
-				<el-table-column prop="logname" label="登录名"  sortable>
+				<el-table-column prop="name" label="名称">
 				</el-table-column>
-				<el-table-column prop="name" label="显示名"  sortable>
+				<el-table-column prop="compName" label="所属公司">
 				</el-table-column>
-				<el-table-column prop="mobile" label="手机号"  sortable>
-				</el-table-column>
-				<el-table-column prop="compName" label="所属公司"  sortable>
-				</el-table-column>
-				<el-table-column label="操作" >
-					<template slot-scope="scope">
-						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-						<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-					</template>
+				<el-table-column prop="descr" label="描述">
 				</el-table-column>
 		</el-table>
 		
+		<div class="pagination">
+			<el-pagination
+				layout="sizes, total, prev, pager, next"
+				@size-change="handleSizeChange"
+				@current-change="handleCurrentChange"
+				:current-page="page"
+				:page-sizes="pageSizes"
+				:page-size="pageSize"
+				:total="total"
+				style="float:right;">
+			</el-pagination>
+		</div>
+		
 		</el-col>
-		<el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
+		
+		<el-col :span="1">
+			&nbsp;
+		</el-col>
+		
+		<el-col :span="12" class="frcol">
+			<div  class="frtitle"><h4>这是标题</h4></div>
+			<!-- 列表 -->
+				<el-table :data="curDevs" highlight-current-row v-loading="listLoading" @selection-change="selsChange">
+				<el-table-column type="selection" >     </el-table-column>
+					<el-table-column type="index" >
+					</el-table-column>
+					<el-table-column prop="name" label="显示名"  sortable>
+					</el-table-column>
+					<el-table-column prop="compName" label="所属公司"  sortable>
+					</el-table-column>
+					<el-table-column label="操作" >
+						<template slot-scope="scope">
+							<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+							<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+						</template>
+					</el-table-column>
+			</el-table>
+		</el-col>
 	</el-row>
 
 	</section>
@@ -47,81 +75,46 @@
 
 				// 列表选中列
 				sels: [],
-
-				// 编辑界面是否显示
-				editFormVisible: false,
-				// editLoading: false,
-				editFormRules: {
-					logname: [
-						{ required: true, message: '请输入登录名', trigger: 'blur' }
-					],
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					],
-					mobile:[
-						{ required: true, message: '请输入电话', trigger: 'blur' },
-						{ pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码'}
-					],
-				},
-
-				// 编辑界面数据
-				editForm: {	},
 			}
 		},
 		computed: {
-			comps(){
-				let compList = this.$store.state.tc.compAllObj.data;
-				//console.log('compList=='+JSON.stringify(compList));
-				return compList;
-			},
 			//试验使用function+mapGetters的形式，完全可以
 			//mapGetter可以不要，也就是说，vuex的store并不一定非要getter来获取值
 			//getter获取值时，因为其变量是全局的，所以不能重复定义
 			//而state中的变量是局部的，这就导致：
 			//当state中可以定义与别的module中同名的变量，但当要经由getter送出时，则必须重新定义一个新的变量，再将state中变量传递给它
-			sysUsers() {
-				//console.log('users==00000000');
-				return this.$store.state.tu.userObj.data;
+			listLoading(){
+				return this.$store.state.td.listLoading;
 			},
 			
-			...mapGetters({
-				//users:'usersNew', // 映射 `this.users` 为 `store.getters.users`
-				listLoading:'listLoadingNew',
-				editLoading:'editLoadingNew',
-			}),
-			currentUsers() {
-					this.total=this.sysUsers.totalNum;
-					return this.sysUsers.content;
+			curDevs() {
+				let devsPage = this.$store.state.td.deviceObj.data;
+				this.total=devsPage.totalNum;
+				return devsPage.content;
 			},
 		},
 		methods: {
-			// 性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-			},
-
 			// 改变页容量
 			handleSizeChange(val) {
 				console.log(`每页 ${val} 条`);
 				this.pageSize = val;
-				this.getSysUsers();
+				this.getDevs();
 			},
 
 			// 翻页
 			handleCurrentChange(val) {
 				console.log(`当前是 ${val} 页`);
 				this.page = val;
-				this.getSysUsers();
+				this.getDevs();
 			},
 			
-			getSysUsers(){
+			getDevs(){
 				let para = {
 					pageNo: this.page,
 					pageSize:this.pageSize,
-					name: this.filters.name,
 				};
 				//console.log('time=='+new Date().toLocaleDateString());
-				this.$store.dispatch('getSysUsers',para);
+				this.$store.dispatch('getDevices',para);
 			},
 
 			// 删除
@@ -225,10 +218,35 @@
 		},
 		created() {
 			//console.log("comp.vue-->调用this.getComps().....");
-			this.getSysUsers();
+			this.getDevs();
 		},
 		// mounted() {
 		// 	this.getUsers();
 		// }
 	}
 </script>
+<style lang="scss" scoped>
+	.frtitle > :first-child{
+		margin: 0px;
+		background-color: #409EFF;
+		padding-left: 20px;
+		color: #ffffff;
+		line-height: 36px;
+		font-size: 17px;
+	}
+	
+	 .el-row {
+    margin-top: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .frcol{
+	  border: blanchedalmond solid 1px;
+  }
+  
+  .pagination{
+	  margin-top: 5px;
+  }
+</style>

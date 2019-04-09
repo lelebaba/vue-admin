@@ -13,3 +13,5 @@ export const GET_COMPS_ALL = 'GET_COMPS_ALL';
 export const GET_COMPS = 'GET_COMPS';
 
 export const GET_SYS_USERS = 'GET_SYS_USERS';
+
+export const GET_DEVICES = 'GET_DEVICES';
